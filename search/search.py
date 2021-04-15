@@ -110,7 +110,9 @@ def breadthFirstSearch(problem):
 
 def uniformCostSearch(problem):
     "Search the node of least total cost first."
-    return search(problem, util.PriorityQueueWithFunction(lambda x: problem.getCostOfActions(x[1])))        
+
+    g = lambda x: problem.getCostOfActions(x[1])
+    return search(problem, util.PriorityQueueWithFunction(g)
 
 def nullHeuristic(state, problem=None):
     """
@@ -121,9 +123,11 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     "Search the node that has the lowest combined cost and heuristic first."
-    g = lambda x: problem.getCostOfActions(x[1])
 
-    return search(problem, util.PriorityQueueWithFunction(lambda x: g(x) + heuristic(x[0], problem)))
+    g = lambda x: problem.getCostOfActions(x[1])
+    h = lambda x: heuristic(x[0], problem)
+    f = lambda x: g(x) + h(x)
+    return search(problem, util.PriorityQueueWithFunction(f))
 
 # Abbreviations
 bfs = breadthFirstSearch
