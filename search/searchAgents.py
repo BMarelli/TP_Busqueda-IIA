@@ -355,9 +355,11 @@ def cornersHeuristic(state, problem):
 
     "*** YOUR CODE HERE ***"
     if problem.isGoalState(state): return 0
-    distances = [util.manhattanDistance(state[0], corner) for corner in state[1]]
 
-    return max(distances)
+    closest_corner = min(state[1], key=lambda corner: util.manhattanDistance(state[0], corner))
+
+    return util.manhattanDistance(state[0], closest_corner) + max([util.manhattanDistance(closest_corner, corner) for corner in state[1]])
+
 
 
 class AStarCornersAgent(SearchAgent):
