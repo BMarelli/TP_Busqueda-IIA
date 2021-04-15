@@ -112,7 +112,7 @@ def uniformCostSearch(problem):
     "Search the node of least total cost first."
 
     g = lambda x: problem.getCostOfActions(x[1])
-    return search(problem, util.PriorityQueueWithFunction(g)
+    return search(problem, util.PriorityQueueWithFunction(g))
 
 def nullHeuristic(state, problem=None):
     """
