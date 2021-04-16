@@ -256,6 +256,9 @@ def euclideanHeuristic(position, problem, info={}):
 # This portion is incomplete.  Time to write code!  #
 #####################################################
 
+#############
+#
+
 class CornersProblem(search.SearchProblem):
     """
     This search problem finds paths through all four corners of a layout.
@@ -277,6 +280,8 @@ class CornersProblem(search.SearchProblem):
         self._expanded = 0 # Number of search nodes expanded
 
         "*** YOUR CODE HERE ***"
+        self.shortside = min(top, right)
+        self.longside = max(top, right)
 
     def getStartState(self):
         "Returns the start state (in your state space, not the full Pacman state space)"
@@ -356,9 +361,29 @@ def cornersHeuristic(state, problem):
     "*** YOUR CODE HERE ***"
     if problem.isGoalState(state): return 0
 
-    closest_corner = min(state[1], key=lambda corner: util.manhattanDistance(state[0], corner))
+    # heuristica 1
+    # return max([util.manhattanDistance(state[0], corner) for corner in state[1]])
 
-    return util.manhattanDistance(state[0], closest_corner) + max([util.manhattanDistance(closest_corner, corner) for corner in state[1]])
+    # heuristica 2
+    # closest_corner = min(state[1], key=lambda corner: util.manhattanDistance(state[0], corner))
+    # return util.manhattanDistance(state[0], closest_corner) + max([util.manhattanDistance(closest_corner, corner) for corner in state[1]])
+
+    # heuristica 3
+    if len(state[1]) == 1:
+        return util.manhattanDistance(state[0], state[1][0])
+
+    if len(state[1]) <= 2:
+        corners_sorted = sorted(state[1], key=lambda corner: util.manhattanDistance(state[0], corner))
+        return util.manhattanDistance(state[0], corners_sorted[0]) + util.manhattanDistance(corners_sorted[0], corners_sorted[1])
+
+    if len(state[1]) == 3:
+        corners_sorted = sorted(state[1], key=lambda corner: util.manhattanDistance(state[0], corner))
+        first_stop = max(corners_sorted, key=lambda corner: util.manhattanDistance(corner, corners_sorted[2]))
+        return problem.shortside + problem.longside + util.manhattanDistance(state[0], first_stop)
+
+    if len(state[1]) == 4:
+        closest_corner = min(state[1], key=lambda corner: util.manhattanDistance(state[0], corner))
+        return util.manhattanDistance(state[0], closest_corner) + 2 * problem.shortside + problem.longside
 
 
 
