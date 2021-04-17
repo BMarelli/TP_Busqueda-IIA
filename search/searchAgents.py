@@ -280,8 +280,8 @@ class CornersProblem(search.SearchProblem):
         self._expanded = 0 # Number of search nodes expanded
 
         "*** YOUR CODE HERE ***"
-        self.shortside = min(top, right)
-        self.longside = max(top, right)
+        self.shortside = min(top, right) - 1
+        self.longside = max(top, right) - 1
 
     def getStartState(self):
         "Returns the start state (in your state space, not the full Pacman state space)"
@@ -372,14 +372,14 @@ def cornersHeuristic(state, problem):
     if len(state[1]) == 1:
         return util.manhattanDistance(state[0], state[1][0])
 
-    if len(state[1]) <= 2:
+    if len(state[1]) == 2:
         corners_sorted = sorted(state[1], key=lambda corner: util.manhattanDistance(state[0], corner))
         return util.manhattanDistance(state[0], corners_sorted[0]) + util.manhattanDistance(corners_sorted[0], corners_sorted[1])
 
     if len(state[1]) == 3:
-        corners_sorted = sorted(state[1], key=lambda corner: util.manhattanDistance(state[0], corner))
-        first_stop = max(corners_sorted, key=lambda corner: util.manhattanDistance(corner, corners_sorted[2]))
-        return problem.shortside + problem.longside + util.manhattanDistance(state[0], first_stop)
+        corner_1, corner_2 = max([(c1, c2) for c1 in state[1] for c2 in state[1]], key=lambda zcorners: util.manhattanDistance(*zcorners))
+        first_stop_cost = min(util.manhattanDistance(state[0], corner_1), util.manhattanDistance(state[0], corner_2))
+        return first_stop_cost + problem.shortside + problem.longside
 
     if len(state[1]) == 4:
         closest_corner = min(state[1], key=lambda corner: util.manhattanDistance(state[0], corner))
