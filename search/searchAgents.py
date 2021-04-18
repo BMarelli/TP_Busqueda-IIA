@@ -325,6 +325,8 @@ class CornersProblem(search.SearchProblem):
                 corners = tuple(corner for corner in state[1] if corner != (nextx, nexty))
                 successors.append((((nextx, nexty), corners), action, 1))
 
+        assert(all([cornersHeuristic(state, self) <= 1 + cornersHeuristic(successor[0], self) for successor in successors]))
+
         self._expanded += 1
         return successors
 
@@ -476,7 +478,8 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+
+    return max([util.manhattanDistance(position, food) for food in foodGrid.asList()] + [0])
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
