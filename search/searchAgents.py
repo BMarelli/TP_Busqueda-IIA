@@ -341,6 +341,22 @@ class CornersProblem(search.SearchProblem):
             if self.walls[x][y]: return 999999
         return len(actions)
 
+# Podemos demostrar que nuestra heuristica es admisible demostrando que es consistente
+# En efecto, la heuristica planteada surge como la solución al problema relajado de eliminar
+# todas las paredes del laberinto. Como tal, cornersHeuristic(state, problem) representa el costo
+# del camino más corto que recorre las esquinas no visitadas partiendo desde el estado state.
+# Si en s faltan recorrer las 4 esquinas, cornersHeuristic devuelve el costo de ir a la esquina
+# más cercana sumado al mínimo costo de recorrer las 3 esquinas restantes (bordeando primero el lado
+# corto del laberinto, luego el largo, y por último, el corto opuesto).
+# Si faltan recorrer 3 esquinas, hay una de esas esquinas que se encuentra "entre medio" de las otras dos.
+# La forma más eficiente de recorrer las esquinas es ir a la esquina más cercana que no sea esa del medio,
+# y luego las otras dos en orden de cercanía. La heurística devuelve ese costo.
+# Si faltan 2 esquinas, el costo es el de ir a la esquina más cercana y de allí a la restante.
+# Finalmente, si solo falta recorrer una esquina, el costo es la distancia manhattan a esta esquina.
+# De esta manera, es evidente que la heuristica es consistente. El costo que la heurística asigna a
+# cualquier sucesor s' de un estado s es por lo menos el que asigna a s menos 1 (si s' está en
+# el recorrido optimo desde s, es decir se acerca a la esquina que hay que recorrer). Por ende,
+#   cornersHeuristic(s, problem) <= 1 + cornersHeuristic(s', problem)
 
 def cornersHeuristic(state, problem):
     """
