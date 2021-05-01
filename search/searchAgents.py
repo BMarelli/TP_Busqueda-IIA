@@ -1,3 +1,4 @@
+# coding=utf-8
 # searchAgents.old.py
 # -------------------
 # Licensing Information: Please do not distribute or publish solutions to this
